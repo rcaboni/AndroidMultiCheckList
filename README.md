@@ -1,6 +1,9 @@
 # AndroidMultiCheckList
 Example how to create a filterable custom multichecked ListView.
 The core of the solution is the MultiCheckAdapter, where you can set the MatchMode and id the selected items must be always on top of the list. 
+<center>
+<img src="https://raw.githubusercontent.com/rcaboni/AndroidMultiCheckList/master/screenshot.png"/>
+</center>
 You need to pass the layout for the row and the ArrayList with all values, eventually the just selected items ArrayList : 
 <pre>
 ArrayList<StringWithTag> sportList = new ArrayList<>();

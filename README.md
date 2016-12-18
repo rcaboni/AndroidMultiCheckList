@@ -1,12 +1,12 @@
 # AndroidMultiCheckList
 Example how to create a filterable custom multichecked ListView.
-The core of the solution is the MultiCheckAdapter, where you can set the MatchMode and id the selected items must be always on top of the list. 
+The core of the solution is the MultiCheckAdapter, where you can set the MatchMode and if the selected items must be always on top of the list. 
 <center>
 <img src="https://raw.githubusercontent.com/rcaboni/AndroidMultiCheckList/master/screenshot.png"/>
 </center>
 You need to pass the layout for the row and the ArrayList with all values, eventually the just selected items ArrayList : 
 <pre>
-ArrayList<StringWithTag> sportList = new ArrayList<>();
+        ArrayList<StringWithTag> sportList = new ArrayList<>();
         sportList.add(new StringWithTag("Basket","23"));
         sportList.add(new StringWithTag("Volley","4"));
         sportList.add(new StringWithTag("Soccer","45"));
@@ -27,7 +27,7 @@ ArrayList<StringWithTag> sportList = new ArrayList<>();
 
 For filter the list you must create an EditText and call the adapter filter 
 <pre>
-EditText tvFilter = (EditText) findViewById(R.id.tvFilter);
+        EditText tvFilter = (EditText) findViewById(R.id.tvFilter);
         tvFilter.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -48,9 +48,9 @@ EditText tvFilter = (EditText) findViewById(R.id.tvFilter);
             }
         });
 </pre>
-The filter are three mode :
-     * MATCH_START : Check items start with search text
-     * MATCH_CONTAINS : Check items contains the search text
-     * MATCH_SMART : if length search text lower 3 user MATCH START, otherwise MATCH_CONTAINS. this is the default
-
+The filter have three mode :<br>
+     * MATCH_START : Check items start with search text<br>
+     * MATCH_CONTAINS : Check items contains the search text<br>
+     * MATCH_SMART : if length search text lower 3 user MATCH START, otherwise MATCH_CONTAINS. this is the default<br>
+<br>
 The selected items are always visible (even don't match the filter),and if you want can positionated on top of the list.

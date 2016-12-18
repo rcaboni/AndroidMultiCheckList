@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MultiCheckListDemo</string>
+    <string name="hello">Hello World, ListViewMultipleSelectionActivity!</string>
+    <string name="result_activity">ResultActivity</string>
+    <string name="submit">Submit</string>
+    <string name="filter">Filter</string>
+
+</resources>

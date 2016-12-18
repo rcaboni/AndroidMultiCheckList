@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/tvFilter"
+        android:padding="10dip"
+        android:textSize="16dip"
+        android:hint="@string/filter"
+        android:background="@drawable/rounded_rectangle_shape"
+        android:drawableLeft="@drawable/ic_search"
+        android:textStyle="bold"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        />
+
+    <Button
+        android:id="@+id/testbutton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Show Selected" />
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_marginTop="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/tvFilter"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/testbutton"/>
+</RelativeLayout>

@@ -23,7 +23,6 @@ import it.aldea.android.databean.StringWithTag;
 /**
  * Created by Roberto on 18/12/2016.
  */
-
 public class MultiCheckAdapter extends ArrayAdapter {
     public static final int MATCH_START = 1;
     public static final int MATCH_CONTAINS = 2;
@@ -38,18 +37,25 @@ public class MultiCheckAdapter extends ArrayAdapter {
     private boolean selectedOnTop=true;
     private int matchMode= MATCH_SMART;
 
-    public MultiCheckAdapter(Context ctx, int resourceId, List<StringWithTag> objects,List<StringWithTag> selected) {
+    public MultiCheckAdapter(Context ctx, int resourceId, List<StringWithTag> objects, List<StringWithTag> selected) {
+        this(ctx,resourceId,objects,selected,true);
+    }
+    public MultiCheckAdapter(Context ctx, int resourceId, List<StringWithTag> objects, List<StringWithTag> selected,boolean orderItems) {
         super(ctx, resourceId, objects);
-        inflater = LayoutInflater.from(ctx);
-        resource = resourceId;
-        if (selected != null) {
-            for (StringWithTag item : selected) {
-                hashSelected.put(item.getTag(), item.toString());
+        try {
+            inflater = LayoutInflater.from(ctx);
+            resource = resourceId;
+            if (selected != null) {
+                for (StringWithTag item : selected) {
+                    hashSelected.put(item.getTag(), item.toString());
+                }
             }
+            items = orderItems ? sortList(objects) : objects;
+            origItems = items;
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex;
         }
-        items = sortList(objects);
-        origItems = sortList(objects);
-
     }
 
     @Override
@@ -89,45 +95,55 @@ public class MultiCheckAdapter extends ArrayAdapter {
                 convertView = inflater.inflate(resource, null);
                 holder.textView = (TextView) convertView.findViewById(R.id.textView);
                 holder.checkBox = (CheckBox) convertView.findViewById(R.id.checkBox);
+                holder.position = position;
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+
+            holder.checkBox.setChecked(hashSelected.containsKey(items.get(position).getTag()));
+            holder.checkBox.setTag(position);
+            holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateSelected((CheckBox) v);
+                }
+            });
+
             holder.textView.setText(items.get(position).toString());
+            holder.textView.setTag(position);
             holder.textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     holder.checkBox.setChecked(!holder.checkBox.isChecked());
+                    updateSelected(holder.checkBox);
                 }
             });
-            holder.checkBox.setChecked(hashSelected.containsKey(items.get(position).getTag()));
-            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b) {
-                        hashSelected.put(items.get(position).getTag(),items.get(position).toString());
-                    }else {
-                        hashSelected.remove(items.get(position).getTag());
-                    }
-                }
-            });
+
 
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
         return convertView;
     }
-
+    private void updateSelected(CheckBox v) {
+        if (v.isChecked()) {
+            hashSelected.put(items.get((Integer) v.getTag()).getTag(),items.get((Integer) v.getTag()).toString());
+        }else {
+            hashSelected.remove(items.get((Integer) v.getTag()).getTag());
+        }
+    }
     class ViewHolder {
         TextView textView;
         CheckBox checkBox;
+        int position;
     }
 
     public List<StringWithTag> getSelected() {
         ArrayList<StringWithTag> selectedItems = new ArrayList<StringWithTag>();
-        Iterator<String> iterator = hashSelected.keySet().iterator();
+        Iterator<Object> iterator = hashSelected.keySet().iterator();
         while (iterator.hasNext()) {
-            String itemTag = iterator.next();
+            Object itemTag = iterator.next();
             selectedItems.add(new StringWithTag(hashSelected.get(itemTag).toString(),itemTag));
         }
         return selectedItems;
@@ -189,7 +205,7 @@ public class MultiCheckAdapter extends ArrayAdapter {
             FilterResults results = new FilterResults();
             if (constraint == null || constraint.length() == 0) {
                 // No filter implemented we return all the original list
-                results.values = origItems;
+                results.values = sortList(origItems);
                 results.count = origItems.size();
                 if (!filterSelected) {
                     selectedItem = (ArrayList) getSelected();
@@ -204,10 +220,10 @@ public class MultiCheckAdapter extends ArrayAdapter {
                 for (StringWithTag p : origItems) {
                     bSearch = false;
                     if (!filterSelected) {
-                            if (hashSelected.containsKey(p.getTag())) {
-                                filteredItems.add(p);
-                                bSearch = true;
-                            }
+                        if (hashSelected.containsKey(p.getTag())) {
+                            filteredItems.add(p);
+                            bSearch = true;
+                        }
                     }
                     if (!bSearch) {
                         switch (getMatchMode()) {
@@ -252,8 +268,8 @@ public class MultiCheckAdapter extends ArrayAdapter {
             Collections.sort(filteredItems, new Comparator<StringWithTag>() {
                 @Override
                 public int compare(StringWithTag item2, StringWithTag item1) {
-                    boolean item1Sel = hashSelected.containsKey((String) item1.getTag());
-                    boolean item2Sel = hashSelected.containsKey((String) item2.getTag());
+                    boolean item1Sel = hashSelected.containsKey(item1.getTag());
+                    boolean item2Sel = hashSelected.containsKey(item2.getTag());
                     if (item1Sel && item2Sel) {
                         return item2.toString().compareTo(item1.toString());
                     } else {
@@ -272,3 +288,5 @@ public class MultiCheckAdapter extends ArrayAdapter {
         return filteredItems;
     }
 }
+
+    
